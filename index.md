@@ -3,81 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Library Catalog</title>
-    <!-- Link to a CSS theme (Bootstrap in this case) -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            padding-top: 50px;
-        }
-        .jumbotron {
-            background-color: #f8f9fa;
-        }
-    </style>
+    <title>Library Management System</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a class="navbar-brand" href="#">Book Library Catalog</a>
-    </nav>
+    <h1>Library Management System</h1>
+    <script>
+        // Define a structure for a Book
+        class Book {
+            constructor(title, author, publishYear, isBorrowed) {
+                this.title = title;
+                this.author = author;
+                this.publishYear = publishYear;
+                this.isBorrowed = isBorrowed;
+            }
+        }
 
-    <div class="container">
-        <div class="jumbotron">
-            <h1 class="display-4">Welcome to the Book Library Catalog</h1>
-            <p class="lead">A simple C++ application to manage a collection of books.</p>
-            <hr class="my-4">
-            <p>This application allows users to add, remove, search, and display book details, as well as generate reading statistics.</p>
-            <a class="btn btn-primary btn-lg" href="https://github.com/yourusername/book-library-catalog" role="button">View on GitHub</a>
-        </div>
+        const books = [
+            new Book("The Hobbit", "J.R.R. Tolkien", 1937, false),
+            new Book("1984", "George Orwell", 1949, true),
+            new Book("To Kill a Mockingbird", "Harper Lee", 1960, false),
+            new Book("The Great Gatsby", "F. Scott Fitzgerald", 1925, true),
+            new Book("Moby Dick", "Herman Melville", 1851, false),
+            new Book("War and Peace", "Leo Tolstoy", 1869, true),
+            new Book("Pride and Prejudice", "Jane Austen", 1813, false),
+            new Book("The Catcher in the Rye", "J.D. Salinger", 1951, true),
+            new Book("The Odyssey", "Homer", 1800, false),
+            new Book("Ulysses", "James Joyce", 1922, true)
+        ];
 
-        <section>
-            <h2>Features</h2>
-            <ul>
-                <li>Add new books to the library</li>
-                <li>Remove books by their index</li>
-                <li>Search for books by title or author</li>
-                <li>Display information about all books</li>
-                <li>Generate reading statistics, including the total number of books, number of borrowed books, and year-wise distribution</li>
-            </ul>
-        </section>
+        function toLowerCase(str) {
+            return str.toLowerCase();
+        }
 
-        <section>
-            <h2>Usage</h2>
-            <ol>
-                <li><strong>Display Books:</strong> Shows the details of all books in the library.</li>
-                <li><strong>Add Book:</strong> Allows you to add a new book by entering its details.</li>
-                <li><strong>Remove Book:</strong> Removes a book by its index in the list.</li>
-                <li><strong>Search Book by Title:</strong> Searches for a book by its title.</li>
-                <li><strong>Search Book by Author:</strong> Searches for books by an author.</li>
-                <li><strong>Generate Reading Statistics:</strong> Displays statistics of the library collection.</li>
-                <li><strong>Exit:</strong> Exits the program.</li>
-            </ol>
-        </section>
+        function displayBookInfo() {
+            let output = "";
+            books.forEach((book, index) => {
+                output += `<div>
+                    <h2>Book ${index + 1}:</h2>
+                    <p>Title: ${book.title}</p>
+                    <p>Author: ${book.author}</p>
+                    <p>Publish Year: ${book.publishYear}</p>
+                    <p>Borrowed: ${book.isBorrowed ? "Yes" : "No"}</p>
+                    <hr>
+                </div>`;
+            });
+            document.getElementById("book-info").innerHTML = output;
+        }
 
-        <section>
-            <h2>Contributing</h2>
-            <p>Contributions are welcome! Please follow these steps to contribute:</p>
-            <ol>
-                <li>Fork the repository.</li>
-                <li>Create a new branch: <code>git checkout -b feature-branch</code></li>
-                <li>Make your changes and commit them: <code>git commit -m "Add new feature"</code></li>
-                <li>Push to the branch: <code>git push origin feature-branch</code></li>
-                <li>Open a pull request and provide a detailed description of your changes.</li>
-            </ol>
-        </section>
+        function addBook() {
+            const title = prompt("Enter title:");
+            const author = prompt("Enter author:");
+            const publishYear = prompt("Enter publish year:");
+            const isBorrowed = confirm("Is the book borrowed?");
 
-        <section>
-            <h2>License</h2>
-            <p>This project is licensed under the MIT License. See the <a href="LICENSE">LICENSE</a> file for details.</p>
-        </section>
+            const newBook = new Book(title, author, publishYear, isBorrowed);
+            books.push(newBook);
+            alert("Book added successfully!");
+            displayBookInfo();
+        }
+
+        function removeBook() {
+            const index = prompt("Enter the index of the book to remove:");
+
+            if (index > 0 && index <= books.length) {
+                books.splice(index - 1, 1);
+                alert("Book removed successfully!");
+                displayBookInfo();
+            } else {
+                alert("Invalid index!");
+            }
+        }
+
+        function searchBooksByTitleOrAuthor() {
+            const input = prompt("Enter title or author to search:");
+            let found = false;
+            const lowerInput = toLowerCase(input);
+
+            books.forEach((book) => {
+                if (toLowerCase(book.title) === lowerInput || toLowerCase(book.author) === lowerInput) {
+                    alert(`Book found!
+                    Title: ${book.title}
+                    Author: ${book.author}
+                    Publish Year: ${book.publishYear}
+                    Borrowed: ${book.isBorrowed ? "Yes" : "No"}`);
+                    found = true;
+                }
+            });
+
+            if (!found) {
+                alert(Book with title or author "${input}" not found.);
+            }
+        }
+
+        function generateStatistics() {
+            const totalBooks = books.length;
+            const borrowedBooks = books.filter(book => book.isBorrowed).length;
+
+            const yearDistribution = books.reduce((acc, book) => {
+                acc[book.publishYear] = (acc[book.publishYear] || 0) + 1;
+                return acc;
+            }, {});
+
+            let distributionOutput = "";
+            for (const year in yearDistribution) {
+                distributionOutput += Year ${year}: ${yearDistribution[year]} book(s)<br>;
+            }
+
+            alert(`Total number of books: ${totalBooks}
+            Number of borrowed books: ${borrowedBooks}
+            Year-wise distribution of books:
+            ${distributionOutput}`);
+        }
+    </script>
+    <div>
+        <button onclick="displayBookInfo()">Display Books</button>
+        <button onclick="addBook()">Add Book</button>
+        <button onclick="removeBook()">Remove Book</button>
+        <button onclick="searchBooksByTitleOrAuthor()">Search Book by Title or Author</button>
+        <button onclick="generateStatistics()">Generate Reading Statistics</button>
     </div>
-
-    <footer class="text-center mt-5">
-        <p>&copy; 2025 Book Library Catalog</p>
-    </footer>
-
-    <!-- Optional JavaScript for Bootstrap components -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <div id="book-info"></div>
 </body>
 </html>
