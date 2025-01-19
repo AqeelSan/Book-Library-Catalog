@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <algorithm> // Added for transform function
 using namespace std;
 
 // Define a structure for a Book
@@ -11,6 +12,13 @@ struct Book {
     int publishYear;
     bool isBorrowed;
 };
+
+// Function to convert string to lowercase
+string toLowerCase(const string& str) {
+    string lowerStr = str;
+    transform(lowerStr.begin(), lowerStr.end(), lowerStr.begin(), ::tolower);
+    return lowerStr;
+}
 
 // Function to display book information
 void displayBookInfo(const vector<Book>& books) {
@@ -55,11 +63,13 @@ void removeBook(vector<Book>& books) {
     }
 }
 
-// Function to search books by title
-void searchBooksByTitle(const vector<Book>& books, const string& title) {
+// Function to search books by title or author
+void searchBooksByTitleOrAuthor(const vector<Book>& books, const string& input) {
     bool found = false;
+    string lowerInput = toLowerCase(input); // Convert input to lowercase
+
     for (size_t i = 0; i < books.size(); i++) {
-        if (books[i].title == title) {
+        if (toLowerCase(books[i].title) == lowerInput || toLowerCase(books[i].author) == lowerInput) { // Compare lowercase strings
             cout << "Book found!" << endl;
             cout << "Title: " << books[i].title << endl;
             cout << "Author: " << books[i].author << endl;
@@ -71,27 +81,7 @@ void searchBooksByTitle(const vector<Book>& books, const string& title) {
     }
 
     if (!found) {
-        cout << "Book with title \"" << title << "\" not found." << endl;
-    }
-}
-
-// Function to search books by author
-void searchBooksByAuthor(const vector<Book>& books, const string& author) {
-    bool found = false;
-    for (size_t i = 0; i < books.size(); i++) {
-        if (books[i].author == author) {
-            cout << "Book found!" << endl;
-            cout << "Title: " << books[i].title << endl;
-            cout << "Author: " << books[i].author << endl;
-            cout << "Publish Year: " << books[i].publishYear << endl;
-            cout << "Borrowed: " << (books[i].isBorrowed ? "Yes" : "No") << endl;
-            found = true;
-            break;
-        }
-    }
-
-    if (!found) {
-        cout << "Book by author \"" << author << "\" not found." << endl;
+        cout << "Book with title or author \"" << input << "\" not found." << endl;
     }
 }
 
@@ -129,7 +119,7 @@ int main() {
         {"War and Peace", "Leo Tolstoy", 1869, true},
         {"Pride and Prejudice", "Jane Austen", 1813, false},
         {"The Catcher in the Rye", "J.D. Salinger", 1951, true},
-        {"The Odyssey", "Homer", -800, false},
+        {"The Odyssey", "Homer", 1800, false},
         {"Ulysses", "James Joyce", 1922, true}
     };
 
@@ -138,10 +128,9 @@ int main() {
         cout << "1. Display Books" << endl;
         cout << "2. Add Book" << endl;
         cout << "3. Remove Book" << endl;
-        cout << "4. Search Book by Title" << endl;
-        cout << "5. Search Book by Author" << endl;
-        cout << "6. Generate Reading Statistics" << endl;
-        cout << "7. Exit" << endl;
+        cout << "4. Search Book by Title or Author" << endl;
+        cout << "5. Generate Reading Statistics" << endl;
+        cout << "6. Exit" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -156,32 +145,24 @@ int main() {
                 removeBook(books);
                 break;
             case 4: {
-                string title;
-                cout << "Enter title to search: ";
+                string input;
+                cout << "Enter title or author to search: ";
                 cin.ignore();
-                getline(cin, title);
-                searchBooksByTitle(books, title);
+                getline(cin, input);
+                searchBooksByTitleOrAuthor(books, input);
                 break;
             }
-            case 5: {
-                string author;
-                cout << "Enter author to search: ";
-                cin.ignore();
-                getline(cin, author);
-                searchBooksByAuthor(books, author);
-                break;
-            }
-            case 6:
+            case 5:
                 generateStatistics(books);
                 break;
-            case 7:
+            case 6:
                 cout << "Exiting..." << endl;
                 break;
             default:
                 cout << "Invalid choice! Please try again." << endl;
                 break;
         }
-    } while (choice != 7);
+    } while (choice != 6);
 
     return 0;
 }
