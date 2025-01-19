@@ -27,7 +27,7 @@
             new Book("War and Peace", "Leo Tolstoy", 1869, true),
             new Book("Pride and Prejudice", "Jane Austen", 1813, false),
             new Book("The Catcher in the Rye", "J.D. Salinger", 1951, true),
-            new Book("The Odyssey", "Homer", 1800, false),
+            new Book("The Odyssey", "Homer", -800, false),
             new Book("Ulysses", "James Joyce", 1922, true)
         ];
 
@@ -91,7 +91,7 @@
             });
 
             if (!found) {
-                alert(Book with title or author "${input}" not found.);
+                alert(`Book with title or author "${input}" not found.`);
             }
         }
 
@@ -106,7 +106,7 @@
 
             let distributionOutput = "";
             for (const year in yearDistribution) {
-                distributionOutput += Year ${year}: ${yearDistribution[year]} book(s)<br>;
+                distributionOutput += `Year ${year}: ${yearDistribution[year]} book(s)<br>`;
             }
 
             alert(`Total number of books: ${totalBooks}
