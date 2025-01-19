@@ -1,187 +1,83 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <map>
-using namespace std;
-
-// Define a structure for a Book
-struct Book {
-    string title;
-    string author;
-    int publishYear;
-    bool isBorrowed;
-};
-
-// Function to display book information
-void displayBookInfo(const vector<Book>& books) {
-    for (size_t i = 0; i < books.size(); i++) {
-        cout << "Book " << i + 1 << ":" << endl;
-        cout << "Title: " << books[i].title << endl;
-        cout << "Author: " << books[i].author << endl;
-        cout << "Publish Year: " << books[i].publishYear << endl;
-        cout << "Borrowed: " << (books[i].isBorrowed ? "Yes" : "No") << endl;
-        cout << "----------------------------" << endl;
-    }
-}
-
-// Function to add a new book
-void addBook(vector<Book>& books) {
-    Book newBook;
-    cout << "Enter title: ";
-    cin.ignore();
-    getline(cin, newBook.title);
-    cout << "Enter author: ";
-    getline(cin, newBook.author);
-    cout << "Enter publish year: ";
-    cin >> newBook.publishYear;
-    cout << "Is the book borrowed? (1 for Yes, 0 for No): ";
-    cin >> newBook.isBorrowed;
-
-    books.push_back(newBook);
-    cout << "Book added successfully!" << endl;
-}
-
-// Function to remove a book by its index
-void removeBook(vector<Book>& books) {
-    int index;
-    cout << "Enter the index of the book to remove: ";
-    cin >> index;
-
-    if (index > 0 && index <= books.size()) {
-        books.erase(books.begin() + index - 1);
-        cout << "Book removed successfully!" << endl;
-    } else {
-        cout << "Invalid index!" << endl;
-    }
-}
-
-// Function to search books by title
-void searchBooksByTitle(const vector<Book>& books, const string& title) {
-    bool found = false;
-    for (size_t i = 0; i < books.size(); i++) {
-        if (books[i].title == title) {
-            cout << "Book found!" << endl;
-            cout << "Title: " << books[i].title << endl;
-            cout << "Author: " << books[i].author << endl;
-            cout << "Publish Year: " << books[i].publishYear << endl;
-            cout << "Borrowed: " << (books[i].isBorrowed ? "Yes" : "No") << endl;
-            found = true;
-            break;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Library Catalog</title>
+    <!-- Link to a CSS theme (Bootstrap in this case) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 50px;
         }
-    }
-
-    if (!found) {
-        cout << "Book with title \"" << title << "\" not found." << endl;
-    }
-}
-
-// Function to search books by author
-void searchBooksByAuthor(const vector<Book>& books, const string& author) {
-    bool found = false;
-    for (size_t i = 0; i < books.size(); i++) {
-        if (books[i].author == author) {
-            cout << "Book found!" << endl;
-            cout << "Title: " << books[i].title << endl;
-            cout << "Author: " << books[i].author << endl;
-            cout << "Publish Year: " << books[i].publishYear << endl;
-            cout << "Borrowed: " << (books[i].isBorrowed ? "Yes" : "No") << endl;
-            found = true;
-            break;
+        .jumbotron {
+            background-color: #f8f9fa;
         }
-    }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="#">Book Library Catalog</a>
+    </nav>
 
-    if (!found) {
-        cout << "Book by author \"" << author << "\" not found." << endl;
-    }
-}
+    <div class="container">
+        <div class="jumbotron">
+            <h1 class="display-4">Welcome to the Book Library Catalog</h1>
+            <p class="lead">A simple C++ application to manage a collection of books.</p>
+            <hr class="my-4">
+            <p>This application allows users to add, remove, search, and display book details, as well as generate reading statistics.</p>
+            <a class="btn btn-primary btn-lg" href="https://github.com/yourusername/book-library-catalog" role="button">View on GitHub</a>
+        </div>
 
-// Function to generate reading statistics
-void generateStatistics(const vector<Book>& books) {
-    int totalBooks = books.size();
-    int borrowedBooks = 0;
+        <section>
+            <h2>Features</h2>
+            <ul>
+                <li>Add new books to the library</li>
+                <li>Remove books by their index</li>
+                <li>Search for books by title or author</li>
+                <li>Display information about all books</li>
+                <li>Generate reading statistics, including the total number of books, number of borrowed books, and year-wise distribution</li>
+            </ul>
+        </section>
 
-    map<int, int> yearDistribution;
+        <section>
+            <h2>Usage</h2>
+            <ol>
+                <li><strong>Display Books:</strong> Shows the details of all books in the library.</li>
+                <li><strong>Add Book:</strong> Allows you to add a new book by entering its details.</li>
+                <li><strong>Remove Book:</strong> Removes a book by its index in the list.</li>
+                <li><strong>Search Book by Title:</strong> Searches for a book by its title.</li>
+                <li><strong>Search Book by Author:</strong> Searches for books by an author.</li>
+                <li><strong>Generate Reading Statistics:</strong> Displays statistics of the library collection.</li>
+                <li><strong>Exit:</strong> Exits the program.</li>
+            </ol>
+        </section>
 
-    for (const auto& book : books) {
-        if (book.isBorrowed) {
-            borrowedBooks++;
-        }
-        yearDistribution[book.publishYear]++;
-    }
+        <section>
+            <h2>Contributing</h2>
+            <p>Contributions are welcome! Please follow these steps to contribute:</p>
+            <ol>
+                <li>Fork the repository.</li>
+                <li>Create a new branch: <code>git checkout -b feature-branch</code></li>
+                <li>Make your changes and commit them: <code>git commit -m "Add new feature"</code></li>
+                <li>Push to the branch: <code>git push origin feature-branch</code></li>
+                <li>Open a pull request and provide a detailed description of your changes.</li>
+            </ol>
+        </section>
 
-    // Display statistics
-    cout << "Total number of books: " << totalBooks << endl;
-    cout << "Number of borrowed books: " << borrowedBooks << endl;
-    cout << "Year-wise distribution of books:" << endl;
+        <section>
+            <h2>License</h2>
+            <p>This project is licensed under the MIT License. See the <a href="LICENSE">LICENSE</a> file for details.</p>
+        </section>
+    </div>
 
-    for (const auto& entry : yearDistribution) {
-        cout << "Year " << entry.first << ": " << entry.second << " book(s)" << endl;
-    }
-}
+    <footer class="text-center mt-5">
+        <p>&copy; 2025 Book Library Catalog</p>
+    </footer>
 
-int main() {
-    vector<Book> books = {
-        {"The Hobbit", "J.R.R. Tolkien", 1937, false},
-        {"1984", "George Orwell", 1949, true},
-        {"To Kill a Mockingbird", "Harper Lee", 1960, false},
-        {"The Great Gatsby", "F. Scott Fitzgerald", 1925, true},
-        {"Moby Dick", "Herman Melville", 1851, false},
-        {"War and Peace", "Leo Tolstoy", 1869, true},
-        {"Pride and Prejudice", "Jane Austen", 1813, false},
-        {"The Catcher in the Rye", "J.D. Salinger", 1951, true},
-        {"The Odyssey", "Homer", -800, false},
-        {"Ulysses", "James Joyce", 1922, true}
-    };
-
-    int choice;
-    do {
-        cout << "1. Display Books" << endl;
-        cout << "2. Add Book" << endl;
-        cout << "3. Remove Book" << endl;
-        cout << "4. Search Book by Title" << endl;
-        cout << "5. Search Book by Author" << endl;
-        cout << "6. Generate Reading Statistics" << endl;
-        cout << "7. Exit" << endl;
-        cout << "Enter your choice: ";
-        cin >> choice;
-
-        switch (choice) {
-            case 1:
-                displayBookInfo(books);
-                break;
-            case 2:
-                addBook(books);
-                break;
-            case 3:
-                removeBook(books);
-                break;
-            case 4: {
-                string title;
-                cout << "Enter title to search: ";
-                cin.ignore();
-                getline(cin, title);
-                searchBooksByTitle(books, title);
-                break;
-            }
-            case 5: {
-                string author;
-                cout << "Enter author to search: ";
-                cin.ignore();
-                getline(cin, author);
-                searchBooksByAuthor(books, author);
-                break;
-            }
-            case 6:
-                generateStatistics(books);
-                break;
-            case 7:
-                cout << "Exiting..." << endl;
-                break;
-            default:
-                cout << "Invalid choice! Please try again." << endl;
-                break;
-        }
-    } while (choice != 7);
-
-    return 0;
-}
+    <!-- Optional JavaScript for Bootstrap components -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
