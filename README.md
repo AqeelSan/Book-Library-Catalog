@@ -43,10 +43,9 @@ Upon running the program, you will be presented with a menu to manage your book 
 1. **Display Books**: Shows the details of all books in the library.
 2. **Add Book**: Allows you to add a new book by entering its details.
 3. **Remove Book**: Removes a book by its index in the list.
-4. **Search Book by Title**: Searches for a book by its title.
-5. **Search Book by Author**: Searches for books by an author.
-6. **Generate Reading Statistics**: Displays statistics of the library collection.
-7. **Exit**: Exits the program.
+4. **Search Book by Title/Author**: Searches for a book by its title or an author.
+5. **Generate Reading Statistics**: Displays statistics of the library collection.
+6. **Exit**: Exits the program.
 
 Follow the on-screen instructions to use each feature.
 
