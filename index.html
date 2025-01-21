@@ -48,28 +48,25 @@
         button:hover {
             background-color: #0056b3;
         }
-        .book-list {
+        .book-list, .statistics, .search-results {
             margin-top: 20px;
         }
-        .book-card {
+        .book-card, .stat-card, .search-card {
             border: 1px solid #ddd;
             padding: 15px;
             margin-bottom: 10px;
             background-color: #fff;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .book-card h3 {
+        .book-card h3, .stat-card h3, .search-card h3 {
             margin: 0;
             font-size: 1.2em;
         }
-        .book-card p {
-            margin: 5px 0;
-        }
-        .book-card .borrowed {
+        .borrowed {
             color: red;
             font-weight: bold;
         }
-        .book-card .available {
+        .available {
             color: green;
             font-weight: bold;
         }
@@ -110,6 +107,22 @@
         <h2>Library Books</h2>
         <div id="book-list" class="book-list"></div>
     </section>
+
+    <section>
+        <h2>Search Books</h2>
+        <div class="form-group">
+            <label for="search">Search by Title or Author</label>
+            <input type="text" id="search" placeholder="Enter title or author">
+        </div>
+        <button onclick="searchBooks()">Search</button>
+        <div id="search-results" class="search-results"></div>
+    </section>
+
+    <section>
+        <h2>Library Statistics</h2>
+        <button onclick="generateStatistics()">Generate Statistics</button>
+        <div id="statistics" class="statistics"></div>
+    </section>
 </main>
 
 <script>
@@ -117,6 +130,14 @@
         { title: "The Hobbit", author: "J.R.R. Tolkien", publishYear: 1937, isBorrowed: false },
         { title: "1984", author: "George Orwell", publishYear: 1949, isBorrowed: true },
         { title: "To Kill a Mockingbird", author: "Harper Lee", publishYear: 1960, isBorrowed: false }
+        { title: "The Great Gatsby", "F. Scott Fitzgerald", publishYear: 1925, isBorrowed:  true},
+        { title: "Moby Dick", "Herman Melville", publishYear: 1851, isBorrowed:  false},
+        { title: "War and Peace", "Leo Tolstoy", publishYear: 1869, isBorrowed:  true},
+        { title: "Pride and Prejudice", "Jane Austen", publishYear: 1813, isBorrowed:  false},
+        { title: "The Catcher in the Rye", "J.D. Salinger", publishYear: 1951, isBorrowed: true},
+        { title: "The Odyssey", "Homer", publishYear: 1800, isBorrowed:  false},
+        { title: "Ulysses", "James Joyce", publishYear: 1922, isBorrowed:  true}
+
     ];
 
     function displayBooks() {
@@ -168,6 +189,57 @@
     function removeBook(index) {
         books.splice(index, 1);
         displayBooks();
+    }
+
+    function searchBooks() {
+        const search = document.getElementById("search").value.trim().toLowerCase();
+        const results = books.filter(book => 
+            book.title.toLowerCase().includes(search) || book.author.toLowerCase().includes(search)
+        );
+
+        const searchResults = document.getElementById("search-results");
+        searchResults.innerHTML = "";
+
+        if (results.length === 0) {
+            searchResults.innerHTML = "<p>No books found.</p>";
+            return;
+        }
+
+        results.forEach(book => {
+            const resultCard = document.createElement("div");
+            resultCard.classList.add("search-card");
+
+            resultCard.innerHTML = `
+                <h3>${book.title}</h3>
+                <p><strong>Author:</strong> ${book.author}</p>
+                <p><strong>Publish Year:</strong> ${book.publishYear}</p>
+                <p><strong>Status:</strong> <span class="${book.isBorrowed ? 'borrowed' : 'available'}">
+                    ${book.isBorrowed ? "Borrowed" : "Available"}</span></p>
+            `;
+
+            searchResults.appendChild(resultCard);
+        });
+    }
+
+    function generateStatistics() {
+        const totalBooks = books.length;
+        const borrowedBooks = books.filter(book => book.isBorrowed).length;
+        const yearDistribution = {};
+
+        books.forEach(book => {
+            yearDistribution[book.publishYear] = (yearDistribution[book.publishYear] || 0) + 1;
+        });
+
+        const statistics = document.getElementById("statistics");
+        statistics.innerHTML = `
+            <p><strong>Total Books:</strong> ${totalBooks}</p>
+            <p><strong>Borrowed Books:</strong> ${borrowedBooks}</p>
+            <h3>Year-wise Distribution</h3>
+        `;
+
+        for (const year in yearDistribution) {
+            statistics.innerHTML += `<p>${year}: ${yearDistribution[year]} book(s)</p>`;
+        }
     }
 
     // Initial display of books
