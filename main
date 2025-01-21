@@ -2,9 +2,9 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+
 using namespace std;
 
-// Structure to represent a book
 struct Book {
     string title;
     string author;
@@ -12,7 +12,6 @@ struct Book {
     bool isBorrowed;
 };
 
-// Vector to store all books
 vector<Book> books = {
     {"The Hobbit", "J.R.R. Tolkien", 1937, false},
     {"1984", "George Orwell", 1949, true},
@@ -26,108 +25,106 @@ vector<Book> books = {
     {"Ulysses", "James Joyce", 1922, true}
 };
 
-// Function to display all books
 void displayBooks() {
     if (books.empty()) {
-        cout << "No books available in the library.\n";
+        cout << "No books available in the library." << endl;
         return;
     }
 
-    cout << "\nLibrary Books:\n";
-    for (size_t i = 0; i < books.size(); ++i) {
-        cout << i + 1 << ". Title: " << books[i].title << "\n"
-             << "   Author: " << books[i].author << "\n"
-             << "   Publish Year: " << books[i].publishYear << "\n"
-             << "   Status: " << (books[i].isBorrowed ? "Borrowed" : "Available") << "\n";
+    for (const auto& book : books) {
+        cout << "Title: " << book.title << endl;
+        cout << "Author: " << book.author << endl;
+        cout << "Publish Year: " << book.publishYear << endl;
+        cout << "Status: " << (book.isBorrowed ? "Borrowed" : "Available") << endl;
+        cout << "-------------------------------------" << endl;
     }
 }
 
-// Function to add a new book
 void addBook() {
     string title, author;
     int year;
-    char isBorrowedChar;
+    char borrowedChar;
     bool isBorrowed;
 
     cout << "Enter book title: ";
-    cin.ignore(); // Clear the input buffer
+    cin.ignore();
     getline(cin, title);
-
-    cout << "Enter book author: ";
+    
+    cout << "Enter author: ";
     getline(cin, author);
 
     cout << "Enter publish year: ";
     cin >> year;
 
     cout << "Is the book borrowed? (y/n): ";
-    cin >> isBorrowedChar;
-    isBorrowed = (tolower(isBorrowedChar) == 'y');
+    cin >> borrowedChar;
+    isBorrowed = (borrowedChar == 'y' || borrowedChar == 'Y');
 
     books.push_back({title, author, year, isBorrowed});
-    cout << "Book added successfully!\n";
+    cout << "Book added successfully!" << endl;
 }
 
-// Function to search books by title or author
 void searchBooks() {
     string query;
-    cout << "Enter title or author to search: ";
-    cin.ignore(); // Clear the input buffer
+    cout << "Enter search query (title or author): ";
+    cin.ignore();
     getline(cin, query);
 
     transform(query.begin(), query.end(), query.begin(), ::tolower);
 
     vector<Book> results;
     for (const auto& book : books) {
-        string lowerTitle = book.title, lowerAuthor = book.author;
-        transform(lowerTitle.begin(), lowerTitle.end(), lowerTitle.begin(), ::tolower);
-        transform(lowerAuthor.begin(), lowerAuthor.end(), lowerAuthor.begin(), ::tolower);
+        string titleLower = book.title;
+        string authorLower = book.author;
+        transform(titleLower.begin(), titleLower.end(), titleLower.begin(), ::tolower);
+        transform(authorLower.begin(), authorLower.end(), authorLower.begin(), ::tolower);
 
-        if (lowerTitle.find(query) != string::npos || lowerAuthor.find(query) != string::npos) {
+        if (titleLower.find(query) != string::npos || authorLower.find(query) != string::npos) {
             results.push_back(book);
         }
     }
 
     if (results.empty()) {
-        cout << "No books found matching the search criteria.\n";
+        cout << "No books found matching the query." << endl;
     } else {
-        cout << "\nSearch Results:\n";
-        for (size_t i = 0; i < results.size(); ++i) {
-            cout << i + 1 << ". Title: " << results[i].title << "\n"
-                 << "   Author: " << results[i].author << "\n"
-                 << "   Publish Year: " << results[i].publishYear << "\n"
-                 << "   Status: " << (results[i].isBorrowed ? "Borrowed" : "Available") << "\n";
+        for (const auto& book : results) {
+            cout << "Title: " << book.title << endl;
+            cout << "Author: " << book.author << endl;
+            cout << "Publish Year: " << book.publishYear << endl;
+            cout << "Status: " << (book.isBorrowed ? "Borrowed" : "Available") << endl;
+            cout << "-------------------------------------" << endl;
         }
     }
 }
 
-// Function to generate and display reading statistics
-void displayStatistics() {
+void generateStatistics() {
     int totalBooks = books.size();
-    int borrowedBooks = count_if(books.begin(), books.end(), [](const Book& book) { return book.isBorrowed; });
+    int borrowedBooks = 0;
+
+    for (const auto& book : books) {
+        if (book.isBorrowed) {
+            borrowedBooks++;
+        }
+    }
+
     int availableBooks = totalBooks - borrowedBooks;
 
-    cout << "\nReading Statistics:\n";
-    cout << "Total Books: " << totalBooks << "\n";
-    cout << "Borrowed Books: " << borrowedBooks << "\n";
-    cout << "Available Books: " << availableBooks << "\n";
-}
-
-// Main menu
-void showMenu() {
-    cout << "\nLibrary Menu:\n";
-    cout << "1. Display All Books\n";
-    cout << "2. Add a New Book\n";
-    cout << "3. Search Books by Title or Author\n";
-    cout << "4. Display Reading Statistics\n";
-    cout << "5. Exit\n";
-    cout << "Choose an option: ";
+    cout << "Total Books: " << totalBooks << endl;
+    cout << "Borrowed Books: " << borrowedBooks << endl;
+    cout << "Available Books: " << availableBooks << endl;
 }
 
 int main() {
     int choice;
 
-    do {
-        showMenu();
+    while (true) {
+        cout << "\nBook Library System" << endl;
+        cout << "1. Display All Books" << endl;
+        cout << "2. Add a New Book" << endl;
+        cout << "3. Search Books" << endl;
+        cout << "4. Generate Reading Statistics" << endl;
+        cout << "5. Exit" << endl;
+        cout << "Enter your choice: ";
         cin >> choice;
 
         switch (choice) {
@@ -141,15 +138,15 @@ int main() {
                 searchBooks();
                 break;
             case 4:
-                displayStatistics();
+                generateStatistics();
                 break;
             case 5:
-                cout << "Exiting the program. Goodbye!\n";
-                break;
+                cout << "Exiting the program. Goodbye!" << endl;
+                return 0;
             default:
-                cout << "Invalid choice. Please try again.\n";
+                cout << "Invalid choice. Please try again." << endl;
         }
-    } while (choice != 5);
+    }
 
     return 0;
 }
