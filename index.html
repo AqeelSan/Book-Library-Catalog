@@ -107,26 +107,15 @@
     </section>
 
     <section>
-        <h2>Search Books</h2>
-        <div class="form-group">
-            <label for="search">Search by Title or Author</label>
-            <input type="text" id="search" placeholder="Enter title or author">
-        </div>
-        <button onclick="searchBooks()">Search</button>
-    </section>
-
-    <section>
         <h2>Library Books</h2>
+        <input type="text" id="search" placeholder="Search by title or author" onkeyup="searchBooks()">
         <div id="book-list" class="book-list"></div>
     </section>
 
     <section>
         <h2>Reading Statistics</h2>
-        <div id="reading-stats">
-            <p><strong>Total Books:</strong> <span id="total-books">0</span></p>
-            <p><strong>Borrowed Books:</strong> <span id="borrowed-books">0</span></p>
-            <p><strong>Available Books:</strong> <span id="available-books">0</span></p>
-        </div>
+        <button onclick="generateStatistics()">Generate Statistics</button>
+        <p id="statistics"></p>
     </section>
 </main>
 
@@ -134,15 +123,14 @@
     const books = [
         { title: "The Hobbit", author: "J.R.R. Tolkien", publishYear: 1937, isBorrowed: false },
         { title: "1984", author: "George Orwell", publishYear: 1949, isBorrowed: true },
-        { title: "To Kill a Mockingbird", author: "Harper Lee", publishYear: 1960, isBorrowed: false }
-        { title: "The Great Gatsby", "F. Scott Fitzgerald", publishYear: 1925, isBorrowed:  true},
-        { title: "Moby Dick", "Herman Melville", publishYear: 1851, isBorrowed:  false},
-        { title: "War and Peace", "Leo Tolstoy", publishYear: 1869, isBorrowed:  true},
-        { title: "Pride and Prejudice", "Jane Austen", publishYear: 1813, isBorrowed:  false},
-        { title: "The Catcher in the Rye", "J.D. Salinger", publishYear: 1951, isBorrowed: true},
-        { title: "The Odyssey", "Homer", publishYear: 1800, isBorrowed:  false},
-        { title: "Ulysses", "James Joyce", publishYear: 1922, isBorrowed:  true}
-
+        { title: "To Kill a Mockingbird", author: "Harper Lee", publishYear: 1960, isBorrowed: false },
+        { title: "The Great Gatsby", author: "F. Scott Fitzgerald", publishYear: 1925, isBorrowed: true },
+        { title: "Moby Dick", author: "Herman Melville", publishYear: 1851, isBorrowed: false },
+        { title: "War and Peace", author: "Leo Tolstoy", publishYear: 1869, isBorrowed: true },
+        { title: "Pride and Prejudice", author: "Jane Austen", publishYear: 1813, isBorrowed: false },
+        { title: "The Catcher in the Rye", author: "J.D. Salinger", publishYear: 1951, isBorrowed: true },
+        { title: "The Odyssey", author: "Homer", publishYear: 1800, isBorrowed: false },
+        { title: "Ulysses", author: "James Joyce", publishYear: 1922, isBorrowed: true }
     ];
 
     function displayBooks(filteredBooks = books) {
@@ -150,7 +138,7 @@
         bookList.innerHTML = "";
 
         if (filteredBooks.length === 0) {
-            bookList.innerHTML = "<p>No books match your search criteria.</p>";
+            bookList.innerHTML = "<p>No books available in the library.</p>";
             return;
         }
 
@@ -164,13 +152,10 @@
                 <p><strong>Publish Year:</strong> ${book.publishYear}</p>
                 <p><strong>Status:</strong> <span class="${book.isBorrowed ? 'borrowed' : 'available'}">
                     ${book.isBorrowed ? "Borrowed" : "Available"}</span></p>
-                <button onclick="removeBook(${index})">Remove Book</button>
             `;
 
             bookList.appendChild(bookCard);
         });
-
-        updateStatistics();
     }
 
     function addBook() {
@@ -179,8 +164,8 @@
         const year = parseInt(document.getElementById("year").value.trim());
         const isBorrowed = document.getElementById("borrowed").value === "true";
 
-        if (!title || !author || isNaN(year)) {
-            alert("Please fill out all fields correctly!");
+        if (!title || !author || !year) {
+            alert("Please fill out all fields!");
             return;
         }
 
@@ -193,30 +178,29 @@
         document.getElementById("borrowed").value = "false";
     }
 
-    function removeBook(index) {
-        books.splice(index, 1);
-        displayBooks();
-    }
-
     function searchBooks() {
-        const query = document.getElementById("search").value.trim().toLowerCase();
-        const filteredBooks = books.filter(book =>
+        const query = document.getElementById("search").value.toLowerCase();
+        const filteredBooks = books.filter(book => 
             book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query)
         );
         displayBooks(filteredBooks);
     }
 
-    function updateStatistics() {
+    function generateStatistics() {
         const totalBooks = books.length;
         const borrowedBooks = books.filter(book => book.isBorrowed).length;
         const availableBooks = totalBooks - borrowedBooks;
 
-        document.getElementById("total-books").textContent = totalBooks;
-        document.getElementById("borrowed-books").textContent = borrowedBooks;
-        document.getElementById("available-books").textContent = availableBooks;
+        const statistics = `
+            Total Books: ${totalBooks} <br>
+            Borrowed Books: ${borrowedBooks} <br>
+            Available Books: ${availableBooks}
+        `;
+        
+        document.getElementById("statistics").innerHTML = statistics;
     }
 
-    // Initial display of books and statistics
+    // Initial display of books
     displayBooks();
 </script>
 
