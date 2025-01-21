@@ -107,30 +107,46 @@
     </section>
 
     <section>
+        <h2>Search Books</h2>
+        <div class="form-group">
+            <label for="search">Search by Title or Author</label>
+            <input type="text" id="search" placeholder="Enter title or author">
+        </div>
+        <button onclick="searchBooks()">Search</button>
+    </section>
+
+    <section>
         <h2>Library Books</h2>
         <div id="book-list" class="book-list"></div>
+    </section>
+
+    <section>
+        <h2>Reading Statistics</h2>
+        <div id="reading-stats">
+            <p><strong>Total Books:</strong> <span id="total-books">0</span></p>
+            <p><strong>Borrowed Books:</strong> <span id="borrowed-books">0</span></p>
+            <p><strong>Available Books:</strong> <span id="available-books">0</span></p>
+        </div>
     </section>
 </main>
 
 <script>
-    // Initialize the books array with some sample data
     const books = [
         { title: "The Hobbit", author: "J.R.R. Tolkien", publishYear: 1937, isBorrowed: false },
         { title: "1984", author: "George Orwell", publishYear: 1949, isBorrowed: true },
         { title: "To Kill a Mockingbird", author: "Harper Lee", publishYear: 1960, isBorrowed: false }
     ];
 
-    // Function to display information about all books
-    function displayBooks() {
+    function displayBooks(filteredBooks = books) {
         const bookList = document.getElementById("book-list");
         bookList.innerHTML = "";
 
-        if (books.length === 0) {
-            bookList.innerHTML = "<p>No books available in the library.</p>";
+        if (filteredBooks.length === 0) {
+            bookList.innerHTML = "<p>No books match your search criteria.</p>";
             return;
         }
 
-        books.forEach((book, index) => {
+        filteredBooks.forEach((book, index) => {
             const bookCard = document.createElement("div");
             bookCard.classList.add("book-card");
 
@@ -145,9 +161,10 @@
 
             bookList.appendChild(bookCard);
         });
+
+        updateStatistics();
     }
 
-    // Function to add a new book
     function addBook() {
         const title = document.getElementById("title").value.trim();
         const author = document.getElementById("author").value.trim();
@@ -168,13 +185,30 @@
         document.getElementById("borrowed").value = "false";
     }
 
-    // Function to remove a book by index
     function removeBook(index) {
         books.splice(index, 1);
         displayBooks();
     }
 
-    // Display books on page load
+    function searchBooks() {
+        const query = document.getElementById("search").value.trim().toLowerCase();
+        const filteredBooks = books.filter(book =>
+            book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query)
+        );
+        displayBooks(filteredBooks);
+    }
+
+    function updateStatistics() {
+        const totalBooks = books.length;
+        const borrowedBooks = books.filter(book => book.isBorrowed).length;
+        const availableBooks = totalBooks - borrowedBooks;
+
+        document.getElementById("total-books").textContent = totalBooks;
+        document.getElementById("borrowed-books").textContent = borrowedBooks;
+        document.getElementById("available-books").textContent = availableBooks;
+    }
+
+    // Initial display of books and statistics
     displayBooks();
 </script>
 
