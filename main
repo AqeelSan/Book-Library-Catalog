@@ -2,8 +2,18 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <algorithm> // Added for transform function
+#include <algorithm>
 using namespace std;
+
+// Define color escape codes
+#define RESET "\033[0m"
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define YELLOW "\033[33m"
+#define BLUE "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN "\033[36m"
+#define BOLD "\033[1m"
 
 // Define a structure for a Book
 struct Book {
@@ -22,12 +32,18 @@ string toLowerCase(const string& str) {
 
 // Function to display book information
 void displayBookInfo(const vector<Book>& books) {
+    cout << BOLD << CYAN << "List of Books:" << RESET << endl;
+    if (books.empty()) {
+        cout << RED << "No books available in the library." << RESET << endl;
+        return;
+    }
+
     for (size_t i = 0; i < books.size(); i++) {
-        cout << "Book " << i + 1 << ":" << endl;
-        cout << "Title: " << books[i].title << endl;
-        cout << "Author: " << books[i].author << endl;
-        cout << "Publish Year: " << books[i].publishYear << endl;
-        cout << "Borrowed: " << (books[i].isBorrowed ? "Yes" : "No") << endl;
+        cout << BOLD << GREEN << "Book " << i + 1 << ":" << RESET << endl;
+        cout << YELLOW << "Title: " << RESET << books[i].title << endl;
+        cout << YELLOW << "Author: " << RESET << books[i].author << endl;
+        cout << YELLOW << "Publish Year: " << RESET << books[i].publishYear << endl;
+        cout << YELLOW << "Borrowed: " << RESET << (books[i].isBorrowed ? RED "Yes" : GREEN "No") << RESET << endl;
         cout << "----------------------------" << endl;
     }
 }
@@ -35,53 +51,53 @@ void displayBookInfo(const vector<Book>& books) {
 // Function to add a new book
 void addBook(vector<Book>& books) {
     Book newBook;
-    cout << "Enter title: ";
+    cout << MAGENTA << "Enter title: " << RESET;
     cin.ignore();
     getline(cin, newBook.title);
-    cout << "Enter author: ";
+    cout << MAGENTA << "Enter author: " << RESET;
     getline(cin, newBook.author);
-    cout << "Enter publish year: ";
+    cout << MAGENTA << "Enter publish year: " << RESET;
     cin >> newBook.publishYear;
-    cout << "Is the book borrowed? (1 for Yes, 0 for No): ";
+    cout << MAGENTA << "Is the book borrowed? (1 for Yes, 0 for No): " << RESET;
     cin >> newBook.isBorrowed;
 
     books.push_back(newBook);
-    cout << "Book added successfully!" << endl;
+    cout << GREEN << "Book added successfully!" << RESET << endl;
 }
 
 // Function to remove a book by its index
 void removeBook(vector<Book>& books) {
     int index;
-    cout << "Enter the index of the book to remove: ";
+    cout << MAGENTA << "Enter the index of the book to remove: " << RESET;
     cin >> index;
 
     if (index > 0 && index <= books.size()) {
         books.erase(books.begin() + index - 1);
-        cout << "Book removed successfully!" << endl;
+        cout << GREEN << "Book removed successfully!" << RESET << endl;
     } else {
-        cout << "Invalid index!" << endl;
+        cout << RED << "Invalid index!" << RESET << endl;
     }
 }
 
 // Function to search books by title or author
 void searchBooksByTitleOrAuthor(const vector<Book>& books, const string& input) {
     bool found = false;
-    string lowerInput = toLowerCase(input); // Convert input to lowercase
+    string lowerInput = toLowerCase(input);
 
     for (size_t i = 0; i < books.size(); i++) {
-        if (toLowerCase(books[i].title) == lowerInput || toLowerCase(books[i].author) == lowerInput) { // Compare lowercase strings
-            cout << "Book found!" << endl;
-            cout << "Title: " << books[i].title << endl;
-            cout << "Author: " << books[i].author << endl;
-            cout << "Publish Year: " << books[i].publishYear << endl;
-            cout << "Borrowed: " << (books[i].isBorrowed ? "Yes" : "No") << endl;
+        if (toLowerCase(books[i].title).find(lowerInput) != string::npos || 
+            toLowerCase(books[i].author).find(lowerInput) != string::npos) {
+            cout << GREEN << "Book found!" << RESET << endl;
+            cout << YELLOW << "Title: " << RESET << books[i].title << endl;
+            cout << YELLOW << "Author: " << RESET << books[i].author << endl;
+            cout << YELLOW << "Publish Year: " << RESET << books[i].publishYear << endl;
+            cout << YELLOW << "Borrowed: " << RESET << (books[i].isBorrowed ? RED "Yes" : GREEN "No") << RESET << endl;
             found = true;
-            break;
         }
     }
 
     if (!found) {
-        cout << "Book with title or author \"" << input << "\" not found." << endl;
+        cout << RED << "Book with title or author \"" << input << "\" not found." << RESET << endl;
     }
 }
 
@@ -99,13 +115,13 @@ void generateStatistics(const vector<Book>& books) {
         yearDistribution[book.publishYear]++;
     }
 
-    // Display statistics
-    cout << "Total number of books: " << totalBooks << endl;
-    cout << "Number of borrowed books: " << borrowedBooks << endl;
-    cout << "Year-wise distribution of books:" << endl;
+    cout << BOLD << CYAN << "Reading Statistics:" << RESET << endl;
+    cout << YELLOW << "Total number of books: " << RESET << totalBooks << endl;
+    cout << YELLOW << "Number of borrowed books: " << RESET << borrowedBooks << endl;
+    cout << YELLOW << "Year-wise distribution of books:" << RESET << endl;
 
     for (const auto& entry : yearDistribution) {
-        cout << "Year " << entry.first << ": " << entry.second << " book(s)" << endl;
+        cout << GREEN << "Year " << entry.first << ": " << entry.second << " book(s)" << RESET << endl;
     }
 }
 
@@ -125,13 +141,14 @@ int main() {
 
     int choice;
     do {
-        cout << "1. Display Books" << endl;
-        cout << "2. Add Book" << endl;
-        cout << "3. Remove Book" << endl;
-        cout << "4. Search Book by Title or Author" << endl;
-        cout << "5. Generate Reading Statistics" << endl;
-        cout << "6. Exit" << endl;
-        cout << "Enter your choice: ";
+        cout << BOLD << CYAN << "\nBook Library Catalog Menu" << RESET << endl;
+        cout << YELLOW << "1. Display Books" << RESET << endl;
+        cout << YELLOW << "2. Add Book" << RESET << endl;
+        cout << YELLOW << "3. Remove Book" << RESET << endl;
+        cout << YELLOW << "4. Search Book by Title or Author" << RESET << endl;
+        cout << YELLOW << "5. Generate Reading Statistics" << RESET << endl;
+        cout << YELLOW << "6. Exit" << RESET << endl;
+        cout << MAGENTA << "Enter your choice: " << RESET;
         cin >> choice;
 
         switch (choice) {
@@ -146,7 +163,7 @@ int main() {
                 break;
             case 4: {
                 string input;
-                cout << "Enter title or author to search: ";
+                cout << MAGENTA << "Enter title or author to search: " << RESET;
                 cin.ignore();
                 getline(cin, input);
                 searchBooksByTitleOrAuthor(books, input);
@@ -156,10 +173,10 @@ int main() {
                 generateStatistics(books);
                 break;
             case 6:
-                cout << "Exiting..." << endl;
+                cout << GREEN << "Exiting... Goodbye!" << RESET << endl;
                 break;
             default:
-                cout << "Invalid choice! Please try again." << endl;
+                cout << RED << "Invalid choice! Please try again." << RESET << endl;
                 break;
         }
     } while (choice != 6);
