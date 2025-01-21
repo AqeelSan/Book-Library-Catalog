@@ -4,143 +4,175 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Library Catalog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+        }
+        main {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .book-list {
+            margin-top: 20px;
+        }
+        .book-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #fff;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .book-card h3 {
+            margin: 0;
+            font-size: 1.2em;
+        }
+        .book-card p {
+            margin: 5px 0;
+        }
+        .book-card .borrowed {
+            color: red;
+            font-weight: bold;
+        }
+        .book-card .available {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
+
+<header>
     <h1>Book Library Catalog</h1>
-    <script>
-        // Define a structure for a Book
-        class Book {
-            constructor(title, author, publishYear, isBorrowed) {
-                this.title = title;
-                this.author = author;
-                this.publishYear = publishYear;
-                this.isBorrowed = isBorrowed;
-            }
-        }
+</header>
 
-        const books = [
-            new Book("The Hobbit", "J.R.R. Tolkien", 1937, false),
-            new Book("1984", "George Orwell", 1949, true),
-            new Book("To Kill a Mockingbird", "Harper Lee", 1960, false),
-            new Book("The Great Gatsby", "F. Scott Fitzgerald", 1925, true),
-            new Book("Moby Dick", "Herman Melville", 1851, false),
-            new Book("War and Peace", "Leo Tolstoy", 1869, true),
-            new Book("Pride and Prejudice", "Jane Austen", 1813, false),
-            new Book("The Catcher in the Rye", "J.D. Salinger", 1951, true),
-            new Book("The Odyssey", "Homer", -800, false),
-            new Book("Ulysses", "James Joyce", 1922, true)
-        ];
-
-        function toLowerCase(str) {
-            return str.toLowerCase();
-        }
-
-        function displayBookInfo() {
-            let output = "";
-            books.forEach((book, index) => {
-                output += `<div>
-                    <h2>Book ${index + 1}:</h2>
-                    <p>Title: ${book.title}</p>
-                    <p>Author: ${book.author}</p>
-                    <p>Publish Year: ${book.publishYear}</p>
-                    <p>Borrowed: ${book.isBorrowed ? "Yes" : "No"}</p>
-                    <hr>
-                </div>`;
-            });
-            document.getElementById("book-info").innerHTML = output;
-        }
-
-        function addBook() {
-            const title = prompt("Enter title:");
-            const author = prompt("Enter author:");
-            const publishYear = prompt("Enter publish year:");
-            const isBorrowed = confirm("Is the book borrowed?");
-
-            const newBook = new Book(title, author, publishYear, isBorrowed);
-            books.push(newBook);
-            alert("Book added successfully!");
-            displayBookInfo();
-        }
-
-        function removeBook() {
-            const index = prompt("Enter the index of the book to remove:");
-
-            if (index > 0 && index <= books.length) {
-                books.splice(index - 1, 1);
-                alert("Book removed successfully!");
-                displayBookInfo();
-            } else {
-                alert("Invalid index!");
-            }
-        }
-
-        function searchBooksByTitleOrAuthor() {
-            const input = prompt("Enter title or author to search:");
-            let found = false;
-            const lowerInput = toLowerCase(input);
-
-            books.forEach((book) => {
-                if (toLowerCase(book.title) === lowerInput || toLowerCase(book.author) === lowerInput) {
-                    alert(`Book found!
-                    Title: ${book.title}
-                    Author: ${book.author}
-                    Publish Year: ${book.publishYear}
-                    Borrowed: ${book.isBorrowed ? "Yes" : "No"}`);
-                    found = true;
-                }
-            });
-
-            if (!found) {
-                alert(`Book with title or author "${input}" not found.`);
-            }
-        }
-
-        function generateStatistics() {
-            const totalBooks = books.length;
-            const borrowedBooks = books.filter(book => book.isBorrowed).length;
-
-            const yearDistribution = books.reduce((acc, book) => {
-                acc[book.publishYear] = (acc[book.publishYear] || 0) + 1;
-                return acc;
-            }, {});
-
-            let distributionOutput = "";
-            for (const year in yearDistribution) {
-                distributionOutput += `Year ${year}: ${yearDistribution[year]} book(s)<br>`;
-            }
-
-            alert(`Total number of books: ${totalBooks}
-            Number of borrowed books: ${borrowedBooks}
-            Year-wise distribution of books:
-            ${distributionOutput}`);
-        }
-    </script>
-    <div>
-        <button onclick="displayBookInfo()">Display Books</button>
+<main>
+    <section>
+        <h2>Add a New Book</h2>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" placeholder="Enter book title">
+        </div>
+        <div class="form-group">
+            <label for="author">Author</label>
+            <input type="text" id="author" placeholder="Enter book author">
+        </div>
+        <div class="form-group">
+            <label for="year">Publish Year</label>
+            <input type="number" id="year" placeholder="Enter publish year">
+        </div>
+        <div class="form-group">
+            <label for="borrowed">Is Borrowed?</label>
+            <select id="borrowed">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+            </select>
+        </div>
         <button onclick="addBook()">Add Book</button>
-        <button onclick="removeBook()">Remove Book</button>
-        <button onclick="searchBooksByTitleOrAuthor()">Search Book by Title or Author</button>
-        <button onclick="generateStatistics()">Generate Reading Statistics</button>
-    </div>
-    <div id="book-info"></div>
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
+    </section>
 
-<h1>The picture element</h1>
+    <section>
+        <h2>Library Books</h2>
+        <div id="book-list" class="book-list"></div>
+    </section>
+</main>
 
-<p>Resize the browser window to load different images.</p>
+<script>
+    const books = [
+        { title: "The Hobbit", author: "J.R.R. Tolkien", publishYear: 1937, isBorrowed: false },
+        { title: "1984", author: "George Orwell", publishYear: 1949, isBorrowed: true },
+        { title: "To Kill a Mockingbird", author: "Harper Lee", publishYear: 1960, isBorrowed: false }
+    ];
 
-<picture>
-  <source media="(min-width:650px)" srcset="img_pink_flowers.jpg">
-  <source media="(min-width:465px)" srcset="img_white_flower.jpg">
-  <img src="img_orange_flowers.jpg" alt="Flowers" style="width:auto;">
-</picture>
+    function displayBooks() {
+        const bookList = document.getElementById("book-list");
+        bookList.innerHTML = "";
+
+        if (books.length === 0) {
+            bookList.innerHTML = "<p>No books available in the library.</p>";
+            return;
+        }
+
+        books.forEach((book, index) => {
+            const bookCard = document.createElement("div");
+            bookCard.classList.add("book-card");
+
+            bookCard.innerHTML = `
+                <h3>${book.title}</h3>
+                <p><strong>Author:</strong> ${book.author}</p>
+                <p><strong>Publish Year:</strong> ${book.publishYear}</p>
+                <p><strong>Status:</strong> <span class="${book.isBorrowed ? 'borrowed' : 'available'}">
+                    ${book.isBorrowed ? "Borrowed" : "Available"}</span></p>
+                <button onclick="removeBook(${index})">Remove Book</button>
+            `;
+
+            bookList.appendChild(bookCard);
+        });
+    }
+
+    function addBook() {
+        const title = document.getElementById("title").value.trim();
+        const author = document.getElementById("author").value.trim();
+        const year = parseInt(document.getElementById("year").value.trim());
+        const isBorrowed = document.getElementById("borrowed").value === "true";
+
+        if (!title || !author || !year) {
+            alert("Please fill out all fields!");
+            return;
+        }
+
+        books.push({ title, author, publishYear: year, isBorrowed });
+        displayBooks();
+
+        document.getElementById("title").value = "";
+        document.getElementById("author").value = "";
+        document.getElementById("year").value = "";
+        document.getElementById("borrowed").value = "false";
+    }
+
+    function removeBook(index) {
+        books.splice(index, 1);
+        displayBooks();
+    }
+
+    // Initial display of books
+    displayBooks();
+</script>
 
 </body>
 </html>
